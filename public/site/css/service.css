@@ -1,0 +1,204 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap");
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Source Sans Pro", sans-serif;
+}
+body{
+    min-height: 100vh;
+}
+:root {
+    --main-color: rgb(0, 109, 0);
+    --link-color: #ff9500;
+    --title-color: #ff9500;
+    --body-bg: #efefef;
+    --text: #5a544b;
+    --white: #fff;
+    --black: #000;
+}
+#top-header {
+    background-color:var(--main-color);
+    height: 45px;
+    line-height: 45px;
+}
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+a{
+    text-decoration: none;
+    color: #ff9500;
+}
+#top-header .top-header-contact{
+    /* text-align: center; */
+    font-weight: bold;
+}
+@media only screen and (max-width:767px){
+    .header-text-sm-hide {
+        display: none;
+    }
+    #top-header-navbar .navbar-nav .nav-item .nav-link{
+        text-align: center;
+    }
+}
+#top-header .top-header-social-icon a{
+    border: 1px solid  var(--link-color);
+    margin: 5px 8px;
+    border-radius: 10px;
+    padding: 5px 7px;
+}
+#top-header .top-header-social-icon a:hover{
+    background-color: var(--link-color);
+    color: var(--white);
+}
+#top-header-navbar .navbar-brand img{
+   width: 94px;
+
+}
+#top-header-navbar .navbar-brand{
+  padding: 0;
+}
+#top-header-navbar .navbar {
+    padding: 0;
+}
+#top-header-navbar .navbar-nav .nav-item .nav-link{
+    font-weight: bold;
+    padding:35px 30px;
+    transition: 1s;
+    color: var(--link-color);
+    
+}
+#top-header-navbar .navbar-nav .nav-item .nav-link.active{
+    background-color: var(--main-color);
+    border-bottom: 5px solid  var(--link-color) ;
+}
+#top-header-navbar .navbar-nav .nav-item .nav-link:hover{
+    background-color: var(--main-color);
+    border-bottom: 5px solid  var(--link-color);
+}
+#top-header-navbar .navbar-nav .dropdown .dropdown-menu{
+    padding: 0px;
+    border: none;   
+    border-radius: 0;
+    background-color: var(--title-color);
+}
+#top-header-navbar .navbar-nav .dropdown .dropdown-menu .dropdown-item{
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    margin: 0;
+    /* color: beige; */
+}
+#top-header-navbar
+    .navbar
+    .navbar-nav
+    .dropdown
+    .dropdown-menu
+    .dropdown-item:hover {
+    background-color: #c67709;
+    color:#fff;
+}
+
+/* servive sections starts here */
+.row .service-title h1{
+    font-size: 45px;
+    font-weight: bold;
+    text-align: center;
+}
+.row .service-title h1 span{
+    color: var(--main-color);
+}
+.row .container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:20px 0px;
+}
+.row .box {
+    margin: 10px;
+    /* border: solid 0px #fff; */
+    text-align: center;
+    width: 300px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 5px;
+    border-bottom: solid 5px var(--main-color);
+    box-shadow: 0px 0px 15px rgb(166, 162, 162);
+}
+
+.row .box:hover {
+    background-color: var(--link-color);
+    margin: 20px 0px 20px 0px;
+    color: #fff;
+}
+
+.row .box h2 {
+    margin: 20px 0px;
+    font-size: 20px;
+}
+
+.row .container .box .icon {
+    height: 30px;
+    width: 35px;
+    /* line-height: 50px; */
+    background-color: #2779f9;
+    padding: 10px 8px;
+    border-radius: 50%;
+    color: #fff;
+    
+
+
+}
+
+.row .box:hover .icon  {
+    background-color: #fff;
+    color: #2779f9;
+}
+
+/* .row {
+    width: 1200px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+       
+} */
+/* servive sections ends here */
+
+
+/* footer section starts here */
+#footer-box{
+    background-color:#373737;
+}
+#footer-box .footer{
+    /* margin-left: 50px; */
+    padding: 40px 200px;
+    color: #fff;
+
+}
+#footer-box .footer h2{
+    font-weight: bold;
+    font-size: 28x;
+}
+#footer-box .footer h3{
+    font-weight: bold;
+    font-size: 20px;
+}
+#footer-box .footer .foot-last{
+    text-align: center;
+}
+@media only screen and (max-width:768px){
+    #footer-box .footer{
+        padding-left: 20px;
+    }
+    #footer-box .footer .foot-last{
+        text-align: left;
+    }
+}
+/* footer section ends here */

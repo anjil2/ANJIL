@@ -1,0 +1,198 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap");
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Source Sans Pro", sans-serif;
+}
+body{
+    min-height: 100vh;
+}
+:root {
+    --main-color: rgb(0, 109, 0);
+    --link-color: #ff9500;
+    --title-color: #ff9500;
+    --body-bg: #efefef;
+    --text: #5a544b;
+    --white: #fff;
+    --black: #000;
+}
+#top-header {
+    background-color:var(--main-color);
+    height: 45px;
+    line-height: 45px;
+}
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+a{
+    text-decoration: none;
+    color: #ff9500;
+}
+.btn {
+    background-color: var(--link-color);
+    color: var(--white);
+    border-radius: 5px;
+    border: 2px solid var(--link-color);
+    padding: 7px 30px;
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 1px;
+    transition: 1s;
+}
+.btn:hover {
+    background-color: var(--title-color);
+    border: 2px solid var(--title-color);
+    color: var(--white);
+}
+#top-header .top-header-contact{
+    /* text-align: center; */
+    font-weight: bold;
+}
+@media only screen and (max-width:767px){
+    .header-text-sm-hide {
+        display: none;
+    }
+    #top-header-navbar .navbar-nav .nav-item .nav-link{
+        text-align: center;
+    }
+}
+#top-header .top-header-social-icon a{
+    border: 1px solid  var(--link-color);
+    margin: 5px 8px;
+    border-radius: 10px;
+    padding: 5px 7px;
+}
+#top-header .top-header-social-icon a:hover{
+    background-color: var(--link-color);
+    color: var(--white);
+}
+#top-header-navbar .navbar-brand img{
+   width: 94px;
+
+}
+#top-header-navbar .navbar-brand{
+  padding: 0;
+}
+#top-header-navbar .navbar {
+    padding: 0;
+}
+#top-header-navbar .navbar-nav .nav-item .nav-link{
+    font-weight: bold;
+    padding:35px 30px;
+    transition: 1s;
+    color: var(--link-color);
+    
+}
+#top-header-navbar .navbar-nav .nav-item .nav-link.active{
+    background-color: var(--main-color);
+    border-bottom: 5px solid  var(--link-color) ;
+}
+#top-header-navbar .navbar-nav .nav-item .nav-link:hover{
+    background-color: var(--main-color);
+    border-bottom: 5px solid  var(--link-color);
+}
+#top-header-navbar .navbar-nav .dropdown .dropdown-menu{
+    padding: 0px;
+    border: none;   
+    border-radius: 0;
+    background-color: var(--title-color);
+}
+#top-header-navbar .navbar-nav .dropdown .dropdown-menu .dropdown-item{
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    margin: 0;
+    /* color: beige; */
+}
+#top-header-navbar
+    .navbar
+    .navbar-nav
+    .dropdown
+    .dropdown-menu
+    .dropdown-item:hover {
+    background-color: #c67709;
+    color:#fff;
+}
+/* navbar sections ends here */
+
+ /* contact section starts here */
+
+#contact-section .form-box {
+    background-color:#eee;
+        padding: 30px 50px ;
+    margin: 50px 100px;
+}
+#contact-section .form-box h1{
+    text-align: center;
+    font-weight: bold;
+}
+#contact-section .form-box h1 span{
+    color: var(--main-color);
+}
+#contact-section .form-box .info-contact .icon{
+    padding-right: 15px;
+}
+@media only screen and (max-width:767px){
+    #contact-section .form-box h1{
+        text-align: left;
+    }
+    #contact-section .form-box .info-contact iframe{
+        height: 300px;
+    }
+}
+/* contact section ends here */
+.form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* text-align: center; */
+}
+.form .form-small input{
+    padding: 5px 150px 4px 5px;
+    margin: 5px 50px;
+    border-radius: 15px;
+}
+.form .form-big textarea{
+    border-radius: 10px;
+}
+.button{
+    text-align: center;
+    padding: 10px;
+    
+}
+/* footer section starts here */
+#footer-box{
+    background-color:#373737;
+}
+#footer-box .footer{
+    /* margin-left: 50px; */
+    padding: 40px 200px;
+    color: #fff;
+
+}
+#footer-box .footer h2{
+    font-weight: bold;
+    font-size: 28x;
+}
+#footer-box .footer h3{
+    font-weight: bold;
+    font-size: 20px;
+}
+#footer-box .footer .foot-last{
+    text-align: center;
+}
+@media only screen and (max-width:768px){
+    #footer-box .footer{
+        padding-left: 20px;
+    }
+    #footer-box .footer .foot-last{
+        text-align: left;
+    }
+}
+/* footer section ends here */
