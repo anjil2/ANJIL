@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -14,10 +15,20 @@
                             </div>
                     </div>
                 <div class="card-body">
+                @if (session('success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                     <div class="border">
                         <table class="table table-stripped">
                                 <tr>
-                                    <th>SN</th>
+                                    <th>Id</th>
                                     <th>Image</th>
                                     <th>Title</th>
                                     <th>Category</th>
@@ -28,42 +39,40 @@
                                     <th>Created Date</th>
                                     <th>Action</th>
                                 </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Image xa hai</td>
-                                    <td>Smart Watch</td>
-                                    <td>Watch</td>
-                                    <td>
-                                25
+                                @foreach($products as $itemi)
+                                <?php
+                                    // dd($item);
+                                    ?>
+                                <tr>   
+                                <td>{{$itemi->id}}</td>
+                                <td>
+                                    @if ($itemi->product_image != null)
+                                                <img src="{{ asset('uploads/product/' . $itemi->product_image) }}"
+                                                    class="img-responsive img-fluid" width="150" height="150" />
+                                            @else
+                                                <span class="text-danger">Image not available</span>
+                                            @endif</td>
+                                            <td>{{ $itemi->product_title }}</td>
+                                              
+                                    <td>{{$itemi-> category_id}}</td>
+                                    <td>{{$itemi->product_stock}}</td>
+                                    <td>${{$itemi->orginal_cost}}</td>
+                                    <td>${{$itemi->discounted_cost}}</td>
+                                    <td class="text-success">
+                                        @if($itemi->status=='active')
+                                        🟢
+                                        @else
+                                        🔴
+                                        @endif
                                     </td>
-                                    <td>$1200</td>
-                                    <td>$1150</td>
-                                    <td class="text-success">🟢</td>
-                                    <td>20 may, 2100</td>
+                                    <td>{{$itemi->created_at->format('M d, Y')}}</td>
                                     <td>
                                         <a href="" class="btn btn-success btn-sm">Edit</a>
                                         <a href="" class="btn btn-danger btn-sm">Delete</a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Image xa hai</td>
-                                    <td>Smart Watch</td>
-                                    <td>Laptop</td>
-                                    <td>20</td>
-                                    <td>$255</td>
-                                    <td>$248</td>
-                                    <td>
-                                        <span class="text-danger">🔴</span>
-                                    </td>
-                                    <td>20 May, 2023</td>
-                                    <td>
-                                        <!-- <a href="" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="" class="btn btn-danger btn-sm">Delete</a> -->
-                                        <button class="btn btn-success btn-sm">Edit</button>
-                                        <button class="btn btn-danger btn-sm">Delete</button>
-                                    </td>
-                                </tr>
+                                @endforeach
+                                    
                         </table>
                     </div>
                 </div>
@@ -83,72 +92,115 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="">
+                    <form action="{{route('admin.postAddProduct')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-2">
                                     <label for="title">Product Title<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="title" name="product_title"
+                                    <input type="text" class="form-control @error('category_title') is-invalid @enderror" id="title" name="product_title"
                                         placeholder="Enter Category Title" required />
+                                        @error('category_title')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="image">Product Image<span class="text-danger">*</span></label>
-                                    <input type="file" class="form-control" id="image" name="product_image"
+                                    <input type="file" class="form-control @error('category_title') is-invalid @enderror" id="image" name="product_image"
                                         placeholder="Enter Category Title" required />
+                                        @error('category_title')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="category_id">Category<span class="text-danger">*</span></label>
+                                <label for="category_id">Category*</label>
                                     <select name="category_id" id="category_id" class="form-control" required>
-                                        <option class="text-center" value="">Choose Category</option>
-                                        <option value="1">Laptop</option>
-                                        <option value="2">Hedphone</option>
+                                        <option value="" class="text-center">Choose Category</option>
+                                        <!-- <option value="1">Laptop</option>
+                                        <option value="2">Hedphone</option> -->
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->category_title }}</option>
+                                        @endforeach
                                     </select>
+                                    @error('category_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
-                           
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="status">Status<span class="text-danger">*</span></label>
-                                    <select name="status" id="status" class="form-control" required>
+                                    <select name="status" id="status" class="form-control @error('status') is-invalid @enderror" required>
                                         <option value="active">🟢</option>
-                                        <option value="hidden">🔴</option>
+                                        <option value="inactive">🔴</option>
                                     </select>
+                                    @error('status')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                 <label for="creared_at">Created Date<span class="text-danger">*</span></label>
-                                 <input type="date" class="form-control">
+                                 <label for="created_at">Created Date<span class="text-danger">*</span></label>
+                                 <input type="date" class="form-control @error('created_at') is-invalid @enderror">
+                                 @error('created_at')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="stock">Stock<span class="text-danger">*</span></label>
-                                    <input type="number" name="stock" id="stock" class="form-control" required />
+                                    <input type="number" name="stock" id="stock" class="form-control @error('stock') is-invalid @enderror" required />
+                                    @error('stock')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="orginal_cost">Orginal Cost<span class="text-danger">*</span></label>
-                                    <input type="number" name="orginal_cost" id="orginal_cost" class="form-control"
+                                    <input type="number" name="orginal_cost" id="orginal_cost" class="form-control @error('orginal_cost') is-invalid @enderror"
                                         required />
+                                        @error('orginal_cost')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group mb-2">
                                     <label for="discounted_cost">Discounted Cost<span class="text-danger">*</span></label>
-                                    <input type="number" name="discounted_cost" id="discounted_cost" class="form-control"
+                                    <input type="number" name="discounted_cost" id="discounted_cost" class="form-control @error('discounted_cost') is-invalid @enderror"
                                         required />
+                                        @error('discounted_cost')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group mb-2">
-                                    <label for="category_description">Description</label>
-                                    <textarea name="category_description" id="category_description" cols="30" rows="10" class="form-control"></textarea>
+                                    <label for="product_description">Description</label>
+                                    <textarea name="product_description" id="product_description" cols="30" rows="10" class="form-control"></textarea>
                                 </div>
                             </div>
                         </div>

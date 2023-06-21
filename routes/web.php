@@ -1,10 +1,8 @@
 <?php
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SiteController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,21 +13,15 @@ use App\Http\Controllers\SiteController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 Route::get('/', [SiteController::class, 'home']);
 Route::get('/about', [SiteController::class, 'about']);
 Route::get('/service', [SiteController::class, 'service']);
-Route::get('/contact', [SiteController::class, 'sontact']);
-
-
+Route::get('/contact', [SiteController::class, 'contact']);
 /**
  * Admin Routes
  */
-
 Auth::routes();
-
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-
 // route name grouping with admin.
 Route::name('admin.')->group(function () {
     // middleware grouping
@@ -39,14 +31,14 @@ Route::name('admin.')->group(function () {
             // admin category routes
             Route::prefix('category')->group(function () {
                 Route::get('manage', [HomeController::class, 'getManageCategory'])->name('getManageCategory');
+                Route::post('add', [HomeController::class, 'postAddCategory'])->name('postAddCategory');
             });
             // admin products routes
             Route::prefix('product')->group(function () {
                 Route::get('manage', [HomeController::class, 'getManageProduct'])->name('getManageProduct');
+                Route::post('add', [HomeController::class, 'postAddProduct'])->name('postAddProduct');
             });
         });
     });
 });
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('admin/product/manage', [HomeController::class, 'getManageProduct'])->name('admin.getManageProduct')->middleware('auth');
