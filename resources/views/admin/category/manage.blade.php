@@ -18,11 +18,16 @@
                                 {{ session('success') }}
                             </div>
                         @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                     <div class="border">
                         <table class="table table-stripped">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
+                                    <th>SN</th>
                                     <th>Image</th>
                                     <th>Title</th>
                                     <th>Status</th>
@@ -36,7 +41,7 @@
                                     // dd($item);
                                     ?>
                                 <tr>
-                                    <td>{{$item->id}}</td>
+                                    <td>{{$loop->iteration}}</td>
                                     
                                     <td>
                                     @if ($item->category_image != null)
@@ -55,8 +60,8 @@
                                     </td>
                                     <td>{{$item->created_at->format('M d, Y')}}</td>
                                     <td>
-                                        <a href="" class="btn btn-success btn-sm">Edit</a>
-                                        <a href="" class="btn btn-danger btn-sm">Delete</a>
+                                        <a href="{{route('admin.getEditCategory',$item->slug)}}" class="btn btn-success btn-sm">Edit</a>
+                                        <a href="{{route('admin.getDeleteCategory',$item->slug)}}" class="btn btn-danger btn-sm">Delete</a>
                                     </td>
                                 </tr>
                                @endforeach
@@ -83,13 +88,15 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                <label for="title">Category Title<span class="text-danger">*</span></label>
-                              <input type="text" class="form-control @error('category_title') is-invalid @enderror" id="title" name="category_title"
-                                placeholder="Enter Category Title" value="{{old('category_title')}}">
-                                @error('category_title')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                               <input type="text" class="form-control @error('category_title') is-invalid @enderror"
+                                id="title" name="category_title" placeholder="Enter Category Title"
+                                value="{{ old('category_title') }}" />
+
+                            @error('category_title')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -109,20 +116,9 @@
                             <label for="status">Status<span class="text-danger">*</span></label>
                             <select name="status" id="status" class="form-control  @error('status') is-invalid @enderror" >
                                 <option value="active">🟢</option>
-                                <option value="hidden">🔴</option>
+                                <option value="inactive">🔴</option>
                             </select>
                             @error('status')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                        </div>
-                         </div>
-                         <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="status">Created Date<span class="text-danger">*</span></label>
-                            <input type="date" class="form-control  @error('created_date') is-invalid @enderror">
-                            @error('created_at')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -140,9 +136,9 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <input type="submit" class="btn btn-primary" value="Save hanges">
+                            <input type="submit" class="btn btn-primary" value="Save changes">
                         </div>
-</div>
+                    </div>
                     </form>
                 </div>
             </div>

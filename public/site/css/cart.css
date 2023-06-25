@@ -1,0 +1,52 @@
+body{
+    min-height: 150vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Add this line to hide horizontal scroll */
+}
+table{
+    text-align: center;
+    margin: 80px auto;
+    border: 1px solid black;
+
+}
+th{
+    border: 1px solid black;
+    padding: 20px 30px;
+}
+td{
+    border: 1px solid black;
+    padding: 40px 60px;
+}
+.content{
+    margin: 0 auto;
+    box-shadow: 2px 3px 10px rgb(184, 180, 180);
+
+}
+.cart{
+    box-shadow: 2px 3px 10px rgb(184, 180, 180);
+}
+.cart{
+    margin: 0 auto;
+}
+.cart td{
+    padding: 10px 100px 10px 10px;
+}
+.cart table{
+    margin-left: auto;
+  margin-right: auto;
+  margin-top:15px;
+  text-align: left;
+}
+h2{
+    border-bottom: 1px solid  rgb(201, 193, 193);
+    padding: 20px;
+}
+.button{
+    text-align: center;
+    margin: 50px 0px;
+}
+.button input{
+    margin: 0 auto;
+}

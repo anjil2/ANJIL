@@ -1,0 +1,86 @@
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 120vh;
+    /* width: 1200px; */
+
+}
+.box .container{
+    box-shadow: 2px 3px 10px rgb(184, 180, 180);
+    width: 700px;
+    border-radius: 10px;
+}
+.container .title h1{
+    color: brown;
+    font-size: 28px;
+    /* border-bottom: 20px; */
+    border-bottom: 1px solid rgb(201, 193, 193);
+    padding: 10px 10px 30px 10px;
+    font-weight: bold;
+
+}
+.container .title p{
+    margin: 0;
+}
+.container input{
+    text-align: left;
+}
+.container label{
+    margin-left: 10px;
+    /* font-weight: 500; */
+}
+.container .name{
+    padding:5px 440px 0px 0px;
+    margin:10px 0px;
+}
+.container .number{
+    padding:5px 15px 0px 0px;
+    margin:10px 0px;
+}
+.container .email{
+    margin:10px 0px;
+    padding:5px 130px 0px 0px;
+}
+.container .address{
+    padding:5px 362px 0px 0px;
+    margin:10px 0px;
+
+}
+.container .fulladdress{
+    padding:5px 398px 0px 0px;
+    margin:10px 0px;
+
+}
+.container textarea{
+    margin:10px;
+    border-radius: 5px;
+
+}
+.order{
+    box-shadow: 2px 3px 8px rgb(184, 180, 180);
+    border-radius: 5px;
+}
+.order-pay .order .order-title h1{
+    color: brown;
+    font-size: 28px;
+    padding: 10px 10px 30px 10px;
+    font-weight: bold;
+
+}
+.order-pay .order .desc {
+    /* border: 1px solid black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.order-pay .order .desc .image img{
+    width: 94px;
+    border-right: 1px solid rgb(184, 180, 180);
+}

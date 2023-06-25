@@ -1,14 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
     public function home()
     {
-        return view('site.home');
+        $data=[
+            'categories'=>Category::where('deleted_at',null)->where('status','active')->orderby('category_title','asc')->get(),
+
+        ];
+        return view('site.home',$data);
     }
     public function about()
     {
@@ -18,8 +22,11 @@ class SiteController extends Controller
     {
         return view('site.service');
     }
-    public function contact()
-    {
-        return view('site.contact');
+    public function getAddCart(){
+        return view('site.cart');
     }
+    public function getAddCartprocced(){
+        return view('site.cartprocced');
+    }
+
 }
