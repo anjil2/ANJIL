@@ -93,6 +93,7 @@
 <h1>    Our <span> Servives</span></h1>
   </div>
   <div class="container">
+
         <div class="box">
             <i class="fa-brands fa-paypal icon"></i>
             <h2>Payment</h2>

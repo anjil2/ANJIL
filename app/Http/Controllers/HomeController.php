@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
+use Carbon\Carbon;
+use App\Models\Order;
+use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Category;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;    
 class HomeController extends Controller
@@ -38,16 +40,40 @@ class HomeController extends Controller
         ];
         return view('admin.category.manage',$data);
     }
-    // Product manage garni function
     public function getManageProduct()
     {
+       
         $data=[
-            'products'=>Product::where('deleted_at',null)->orderby('product_title','asc')->get(),
+            'products'=>Product::where('deleted_at',null)->orderby('id','desc')->get(),
             'categories'=>Category::where('deleted_at',null)->orderby('id','desc')->get(),
+
         ];
         return view('admin.product.manage',$data);
     }
+  public function getManageOrder()
+  {
+$data=([
+    'orders'=>Order::all(),
+]);
+return view('admin.order.manage',$data);
+  }
+  public function makePaymentComplete($id)
+  {
+      $order = Order::where('id', $id)->limit(1)->first();
+      if (is_null($order)) {
+          return redirect()->back()->with('error', 'Order not found');
+      }
 
+      if ($order->payment_status == 'Y') {
+          $order->payment_status = 'N';
+          $order->save();
+      } else {
+          $order->payment_status = 'Y';
+          $order->save();
+      }
+
+      return redirect()->back()->with('success', 'Order payment status changed.');
+  }
 
     // category add garni wala function ho yo
 
@@ -318,7 +344,7 @@ return redirect()->back()->with('success','Category deleted successfully');
         $product=Product::where('slug',$slug)->where('deleted_at',null)->limit(1)->first();    
         // dd($product); 
         $request->validate([
-            'product_title' => 'required|unique:products,product_title',
+            'product_title' => 'required|unique:products,product_title,' . $product->id,
             'category_id' => 'required|integer|exists:categories,id',
             'product_stock' => 'required|integer',
             'orginal_cost' => 'required|numeric',
@@ -335,7 +361,6 @@ return redirect()->back()->with('success','Category deleted successfully');
         $product_title = $request->input('product_title');
         // slug generate haneko
         $slug = Str::slug($product_title);
-
         $category_id = $request->input('category_id');
         $category = Category::where('id', $category_id)->where('deleted_at', null)->limit(1)->first();
 
@@ -394,11 +419,6 @@ return redirect()->back()->with('success','Category deleted successfully');
         $product->product_description = $product_description;
         $product->orginal_cost = $orginal_cost;
         $product->discounted_cost = $discounted_cost;
-
-
-        
-       
-
         if ($image) {
             $product->product_image = $product_image; // image ko uniquename.extension save gareko variable garnu hai
         }
@@ -407,4 +427,15 @@ return redirect()->back()->with('success','Category deleted successfully');
 
         return redirect()->route('admin.getManageProduct')->with('success', 'Product Edited successfully');
     }
+    // add to cart lai delete garni function
+    public function getDeleteCart($product_id)
+    {
+        $cartdelete = Cart::where('product_id', $product_id)->limit(1)->first();
+        if (is_null($cartdelete)) {
+            return redirect()->back()->with('error', 'Cart not found');
+        }
+        $cartdelete->delete();
+        return redirect()->back()->with('success', 'Cart deleted successfully!');
+    }
+   
 }

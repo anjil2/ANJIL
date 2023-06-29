@@ -7,6 +7,7 @@
 }
 body{
     min-height: 100vh;
+    overflow-x: hidden;
 }
 :root {
     --main-color: rgb(0, 109, 0);
@@ -322,6 +323,7 @@ padding:0px 20px 0px 0px;
     /* width: 80%; */
     margin: 0 10%;
 }
+
 .product{
     background-color: whitesmoke;
     position: relative;
@@ -331,11 +333,12 @@ padding:0px 20px 0px 0px;
     align-items: center;
     border-radius: 10px;
     margin: 40px 15px;
-    box-shadow: 0 0 20px rgb(58, 58, 58);
+    box-shadow: 1px 1px 3px rgb(158, 157, 157);
+    
 }
 .product:hover{
-    margin-top: 15px;
     transition: 0.5s;
+    box-shadow: 0 0 20px rgb(58, 58, 58);
 }
 .product .cart-icon{
     position: absolute;
@@ -382,8 +385,13 @@ padding:0px 20px 0px 0px;
 .product .content{
     text-align: start;
 }
+.product .content a{
+    color: #000;
+    margin-left: 5px;
+    font-weight: bold;
+    font-size: 20px;
+}
 .product .content h2{
-    text-align: end;
     width: 100%;
     color: Green;
     margin-top: 5px;
@@ -423,14 +431,13 @@ padding:0px 20px 0px 0px;
     transition: 1s;
 }
 .product .content .product-top{
-    margin-top: 15px;
-    /* text-align: start; */
     display: flex;
     font-size: 20px;
+    margin-left: 10px;
 }
-.product .content .product-top .rate{
-    margin-left: 18%;
-    color: var(--black);
+.product .content h1{
+    margin-left: 10px;
+    margin-bottom:30px;
 }
 .product .content .product-top span .star{
     color: var(--link-color);

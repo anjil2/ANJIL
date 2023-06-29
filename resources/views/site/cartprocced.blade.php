@@ -1,128 +1,179 @@
+<?php
+$carts = \App\Models\Cart::all(); // Retrieve the cart items from the database or adjust the query according to your logic
+?>
 @extends('layouts.home')
 @section('all')
-    <!DOCTYPE html>
-    <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <link rel="stylesheet" href="{{ asset('site/css/cartprocced.css') }}">
-    </head>
-
-    <body>
-        <div class="box">
-            <div class="row">
-                <div class="container col-md-8">
-                    <div class="title">
-                        <h1>Billing Details</h1>
-                    </div>
-                    <div class="row">
-                        <div class="form">
-                            <div class="form-group">
-                                <label for="title">Name<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('category_title') is-invalid @enderror"
-                                    id="title" name="category_title" placeholder="" value="" />
+    {{-- checkout section starts here --}}
+    <section id="checkout">
+        <div class="container">
+            <form action="{{ route('postCheckout') }}" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Billing Details</h2>
                             </div>
-                            <div>
+                            <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="title">Mobile Number<span class="text-danger">*</span></label>
-                                            <input type="number" class="form-control" name="phonenumber" placeholder=""
-                                                value="" />
+                                            <label for="name">Name*</label>
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                                name="name" id="name" placeholder="" value="{{ old('name') }}"
+                                                required>
+
+                                            @error('name')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="title">Email<span class="text-danger">*</span></label>
-                                            <input type="email" class="form-control" name="email" placeholder=""
-                                                value="{{ old('category_title') }}" />
+                                            <label for="mobile_number">Mobile Number*</label>
+                                            <input type="text"
+                                                class="form-control @error('mobile_number') is-invalid @enderror"
+                                                name="mobile_number" id="mobile_number" placeholder=""
+                                                value="{{ old('mobile_number') }}" required>
+
+                                            @error('mobile_number')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="email">Email*</label>
+                                            <input type="text" class="form-control @error('email') is-invalid @enderror"
+                                                name="email" id="email" placeholder="" value="{{ old('email') }}"
+                                                required>
+
+                                            @error('email')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="title">Shopping Address<span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="name" placeholder=""
-                                                value="{{ old('category_title') }}" />
+                                            <label for="full_address">Full Address*</label>
+                                            <input type="text"
+                                                class="form-control @error('full_address') is-invalid @enderror"
+                                                name="address" id="full_address" placeholder=""
+                                                value="{{ old('full_address') }}" required>
+
+                                            @error('full_address')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="title">Full Address<span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" name="name" placeholder=""
-                                                value="{{ old('category_title') }}" />
+                                            <label for="additional_information">Additon Informations*</label>
+                                            <textarea class="form-control @error('additional_information') is-invalid @enderror" name="additional_information"
+                                                id="additional_information" placeholder="Additional Information about yourself. " rows="11">{{ old('additional_information') }}</textarea>
+
+                                            @error('additional_information')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="title">Addition Informations<span
-                                                class="text-danger">*</span></label><br>
-                                        <textarea name="info" class="form-control" cols="70" rows="10"
-                                            value="Note About your order, eg, special notes for delivery"></textarea>
+                                </div>
+                                {{-- <div class="row model-footer">
+                                    <div class="col-md-12 text-center mt-5">
+                                        <input type="submit" class="btn w-100 btn-normal" value="Place Order">
+                                    </div>
+                                </div> --}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Your Orders</h2>
+                            </div>
+                            <div class="card-body">
+                                <table class="table">
+                                    <tbody>
+                                        <?php
+                                        $carts = App\Models\Cart::where('cart_code', $code)->get();
+                                        ?>
+                                        @foreach ($carts as $cart)
+                                            <tr>
+                                                <td>
+                                                    <img src="{{ asset('uploads/product/' . $cart->getProductFromCart->product_image) }}"
+                                                        alt="{{ $cart->getProductFromCart->product_title }}"
+                                                        class="img-fluid">
+                                                </td>
+                                                <td>
+                                                    <p>{{ $cart->getProductFromCart->product_title }} <br>
+                                                        {{ $cart->getProductFromCart->category->category_title }}
+                                                        Trekking Region<br>
+                                                        {{ $cart->quantity }} * Rs. {{ $cart->cost }}
+                                                        {{$cart->cart_code }}
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <div class="row top-bottom-border">
+                                    <div class="col-md-6">Sub Total:</div>
+                                    <div class="col-md-6 text-right cost">Rs {{ $carts->sum('total_price') }}</div>
+                                </div>
+                                <div class="row top-bottom-border">
+                                    <div class="col-md-6">Shipping Charge:</div>
+                                    <div class="col-md-6 text-right cost">Rs 100 (all over Nepal)</div>
+                                </div>
+                                <div class="row top-bottom-border">
+                                    <div class="col-md-6">Grand Total:</div>
+                                    <div class="col-md-6 text-right cost">Rs.
+                                        {{ $carts->sum('total_price') + 100 }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-check">
+                                    {{-- <label class="form-check-label mb-2">
+                                        <input type="radio" class="form-check-input" name="payment_method" id=""
+                                            value="online" required>
+                                        <img src="{{ asset('site/image/esewa.png') }}" alt="" class="img-fluid">
+                                    </label> <br> --}}
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="payment_method" id=""
+                                            value="cod" required>
+
+                                        <img src="{{ asset('site/image/cod.png') }}" alt="" class="img-fluid">
+                                    </label>
+
+                                    @error('payment_method')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="row model-footer">
+                                    <div class="col-md-12 text-center mt-5">
+                                        <input type="submit" class="btn w-100 btn-normal" value="Place Order">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="order-pay col-md-4">
-                    <div class="order">
-                        <div class="order-title">
-                            <h1 style="border-bottom:1px solid rgb(184, 180, 180);">Your Orders</h1>
-                        </div>
-                        <div class="row" style="border-bottom:1px solid rgb(184, 180, 180); margin:0px 0px;">
-                            <div class="desc col-md-10">
-                                <div class="image">
-                                    <img src="{{ asset('site/image/khatrilogo.png') }}" alt="">
-                                </div>
-                                <div class="describe">
-                                    <div class="col-md-12">
-                                        Anjil Khatri
-                                    </div>
-                                    <div class="col-md-12">
-                                        Anjil Khatri
-                                    </div>
-                                    <div class="col-md-12">
-                                        Anjil Khatri
-                                    </div>
-
-
-
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 text-left">
-                                <h5>Sub Total:</h3>
-                            </div>
-                            <div class="col-md-6 text-left">
-                                <h5> Rs.0</h3>
-                            </div>
-                            <div class="col-md-6 text-left">
-                                <h5>Shipping Charge:</h3>
-                            </div>
-                            <div class="col-md-6 text-left">
-                                <h5> Rs.0</h3>
-                            </div>
-                            <div class="col-md-6 text-left">
-                                <h5>Sub Total:</h3>
-                            </div>
-                            <div class="col-md-6 text-left">
-                                <h5> Rs.0</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="button text-center mt-2">
-                        <input type="submit" class="btn btn-primary" value="Place Order">
-                    </div>
-                </div>
-            </div>
-
+            </form>
         </div>
-        </div>
-        </div>
-    </body>
-
-    </html>
+    </section>
+    {{-- checkout section ends here --}}
 @endsection

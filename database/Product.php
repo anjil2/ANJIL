@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-
-    //  kun kun field database ma add huna sakxan
-    protected $fillable = [
+     //  kun kun field database ma add huna sakxan
+     protected $fillable = [
         'category_id',
         'product_title',
         'slug',
@@ -29,11 +28,14 @@ class Product extends Model
     protected $casts = [
         'deleted_at' => 'datetime',
     ];
+    //   yo chai eloquent relationship ho laravel ko 
+public function category()
+{
+//  mathi ko category() bhanni xa ni tyo chai function define gareko name ho 
+    // return $this->kun chai relation ho ex.hasone..(modelname kata bata access garni bhanera::class,'foreign key','primarykey');
 
+    // belongTo chai yo product chai category ko child ho ani chai eutai parent i.e. category sng belong garxa tesaile  
+    return $this->belongsTo(Category::class,'category_id','id');
+}
 
-    // prouduct ko category fetch garni
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
-    }
 }

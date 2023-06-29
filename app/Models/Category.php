@@ -29,6 +29,10 @@ public function products(){
     // return $this->kun chai relation ho ex.hasone..(modelname kata bata access garni bhanera::class,'foreign key','primarykey');
 
     // hasMany chai yo category parent bhayo ani yesko dherau hild huna sakxa tesaile bhayera ho
-    return $this->hasMany(Product::class,'category_id','id');
+    return $this->hasMany(Product::class, 'category_id', 'id')->where('deleted_at', null);
+}
+public function activeProducts()
+    {
+        return $this->hasMany(Product::class, 'category_id', 'id')->where('deleted_at', null)->where('status', 'active');
 }
 }

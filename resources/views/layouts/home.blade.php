@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ asset('site/fontawesome/all.css') }}">
     <!-- bootstrap link gareko -->
     <link rel="stylesheet" href="{{ asset('site/bootstrap/bootstrap.css') }}">
+    {{-- toastr --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <!-- style.css  link gareko -->
     <link rel="stylesheet" href="{{ asset('site/css/style.css') }}">
 </head>
@@ -46,6 +48,16 @@
                         <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
+                        <?php
+                        $cart_code = session('cart_code');
+                        if ($cart_code) {
+                            $cart_items = \App\Models\Cart::where('cart_code', $cart_code)->get(); 
+                            $total_amount = $cart_items->sum('total_price'); 
+                            // dd($cart_items);  
+                            $code = $cart_code;
+                        }
+                        // dd($code);
+                        ?>
                         <!-- Button trigger modal -->
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -57,29 +69,56 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
-                                        <div style="border:1px solid black;border-radius:8px;margin:0px;" class="row">
-                                            <div class="col-md-6 text-left">
-                                                <h5>Total:</h3>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <h5> Rs.0</h3>
-                                            </div>
+                                    @if ($cart_items->count() > 0)
+                                        <div class="modal-body">
+                                        @foreach ($cart_items as $cart ) 
+                                         <div class="row align-items-center justify-content-center black-border">
+                                        <div class="col-md-4">
+                                            <img src="{{ asset('uploads/product/' . $cart->getProductFromCart->product_image) }}"
+                                                alt="" class="img-fluid">
                                         </div>
-                                    </div>
-                                    <div class="text-center">
-                                        <a style="padding:5px 199px;" href="{{route('site.getAddCart')}}">Go To Cart</a>
-                                    </div>
-                                    <div class="text-center">
-                                        <a style="padding:5px 188px;" href="{{route('site.getAddCartprocced')}}" >Go To Procced</a>
+                                        <div class="col-md-8">
+                                            <p>
+                                                {{ $cart->getProductFromCart->product_title }}
+                                            </p>
+                                            <p>{{ $cart->getProductFromCart->category->category_title }}</p>
+                                            <p>{{ $cart->quantity }} * Rs. {{ $cart->price }}</p>
                                         </div>
-                                    </div>
+                                        <div class="col-md-2">
+                                            <a href="{{ route('getDeleteCart', $cart->id) }}"
+                                                class="btn btn-delete"><i class="fa-solid fa-trash"></i></a>
+                                        </div>
+                                        @endforeach
+                                            <div style="border:1px solid black;border-radius:8px;margin:0px;"
+                                                class="row">
+                                                <div class="col-md-6 text-left">
+                                                    <h5>Total:</h3>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5> Rs.{{$total_amount}}</h3>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="text-center">
+                                            <a style="padding:5px 103px;" href="{{ route('site.getAddCart') }}">Go To
+                                                Cart</a>
+                                        </div>
+                                        <div class="text-center">
+                                            <a style="padding:5px 90px;"
+                                                href="{{ route('site.getAddCartprocced', $code) }}">Go To
+                                                Procced</a>
+                                        </div>
+                                        @else
+                        <div class="modal-body">
+                            <div class="alert alert-danger">No data found!</div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 
@@ -150,6 +189,11 @@
 
                                 {{-- bootstrap ko javascript lai link gareko --}}
                                 <script src="{{ asset('site/bootstrap/bootstrap.js') }}"></script>
+
+
+    {{-- toastr --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 
 
                                 {{-- fontawesome ko js link gareko --}}

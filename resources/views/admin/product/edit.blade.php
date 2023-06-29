@@ -19,7 +19,6 @@
                                 {{ session('error') }}
                             </div>
                         @endif
-
                 <div class="modal-body">
                 <form action="" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -27,9 +26,9 @@
                         <div class="col-md-12">
                         <div class="form-group mb-2">
                                     <label for="title">Product Title*</label>
-                                    <input type="text" class="form-control @error('category_title') is-invalid @enderror"
+                                    <input type="text" class="form-control @error('product_title') is-invalid @enderror"
                                         id="title" name="product_title" placeholder="Enter Category Title"
-                                        value="{{ $product->product_title }}" required />
+                                        value="{{ $product->product_title }}" />
 
                                     @error('product_title')
                                         <span class="invalid-feedback" role="alert">
@@ -59,7 +58,7 @@
                        <div class="col-md-4">
                                 <div class="form-group">
                                 <label for="category_id">Category*</label>
-                                    <select name="category_id" id="category_id" class="form-control @error('product_image') is-invalid @enderror" required>
+                                    <select name="category_id" id="category_id" class="form-control @error('product_image') is-invalid @enderror" >
                                         <option value="" class="text-center">Choose Category</option>
                                         <!-- <option value="1">Laptop</option>
                                         <option value="2">Hedphone</option> -->
@@ -99,7 +98,7 @@
                                                 <label for="product_stock">Stock<span class="text-danger">*</span></label>
                                                 <input type="number" name="product_stock" id="product_stock"
                                                     class="form-control @error('product_stock') is-invalid @enderror"
-                                                    value="{{ $product->product_stock }}" required />
+                                                    value="{{ $product->product_stock }}"  />
                                                 @error('product_stock')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -111,7 +110,7 @@
                                 <div class="form-group">
                                     <label for="orginal_cost">Orginal Cost<span class="text-danger">*</span></label>
                                     <input type="number" name="orginal_cost" id="orginal_cost" class="form-control @error('orginal_cost') is-invalid @enderror"
-                                    value="{{ $product->orginal_cost}}" required />
+                                    value="{{ $product->orginal_cost}}"  />
                                         @error('orginal_cost')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -123,7 +122,7 @@
                                 <div class="form-group mb-2">
                                     <label for="discounted_cost">Discounted Cost<span class="text-danger">*</span></label>
                                     <input type="number" name="discounted_cost" id="discounted_cost" class="form-control @error('discounted_cost') is-invalid @enderror"
-                                    value="{{ $product->discounted_cost}}" required />
+                                    value="{{ $product->discounted_cost}}"  />
                                         @error('discounted_cost')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

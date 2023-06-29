@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="{{ asset('site/fontawesome/all.css') }}">
     <!-- bootstrap link gareko -->
     <link rel="stylesheet" href="{{ asset('site/bootstrap/bootstrap.css') }}">
+
+    {{-- toastr --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+
     <!-- style.css  link gareko -->
     <link rel="stylesheet" href="{{ asset('site/css/style.css') }}">
 </head>
@@ -46,6 +51,16 @@
                         <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
+                        <?php
+                        $cart_code = session('cart_code');
+                        if ($cart_code) {
+                            $cart_items = \App\Models\Cart::where('cart_code', $cart_code)->get(); 
+                            $total_amount = $cart_items->sum('total_price'); 
+                            // dd($cart_items);  
+                            $code = $cart_code;
+                        }
+                        // dd($code);
+                        ?>
                         <!-- Button trigger modal -->
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -57,33 +72,64 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
-                                        <div style="border:1px solid black;border-radius:8px;margin:0px;" class="row">
-                                            <div class="col-md-6 text-left">
-                                                <h5>Total:</h3>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <h5> Rs.0</h3>
-                                            </div>
+                                    @if ($cart_items->count() > 0)
+                                        <div class="modal-body">
+                                        @foreach ($cart_items as $cart ) 
+                                         <div class="row align-items-center justify-content-center black-border">
+                                        <div class="col-md-4">
+                                            <img src="{{ asset('uploads/product/' . $cart->getProductFromCart->product_image) }}"
+                                                alt="" class="img-fluid">
                                         </div>
-                                    </div>
-                                    <div class="text-center">
-                                        <a style="padding:5px 199px;" href="{{route('site.getAddCart')}}">Go To Cart</a>
-                                    </div>
-                                    <div class="text-center">
-                                        <a style="padding:5px 188px;" href="{{route('site.getAddCartprocced')}}" >Go To Procced</a>
+                                        <div class="col-md-8">
+                                            <p>
+                                                {{ $cart->getProductFromCart->product_title }}
+                                            </p>
+                                            <p>{{ $cart->getProductFromCart->category->category_title }}</p>
+                                            <p>{{ $cart->quantity }} * Rs. {{ $cart->price }}</p>
                                         </div>
-                                    </div>
+                                        <div class="col-md-2">
+                                            <a href="{{ route('getDeleteCart', $cart->id) }}"
+                                                class="btn btn-delete"><i class="fa-solid fa-trash"></i></a>
+                                        </div>
+                                        @endforeach
+                                            <div style="border:1px solid black;border-radius:8px;margin:0px;"
+                                                class="row">
+                                                <div class="col-md-6 text-left">
+                                                    <h5>Total:</h3>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5> Rs.{{$total_amount}}</h3>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="text-center">
+                                            <a style="padding:5px 103px;" href="{{ route('site.getAddCart') }}">Go To
+                                                Cart</a>
+                                        </div>
+                                        <div class="text-center">
+                                            <a style="padding:5px 90px;"
+                                                href="{{ route('site.getAddCartprocced', $code) }}">Go To
+                                                Procced</a>
+                                        </div>
+                                        @else
+                        <div class="modal-body">
+                            <div class="alert alert-danger">No data found!</div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        </div>
     </section>
-
     <!-- top-header section ends here -->
+    <?php
+    $navbar_categories = \App\Models\Category::where('deleted_at', null)
+        ->where('status', 'active')
+        ->get();
+    ?>
     <!-- navbar section starts here -->
     <section id="top-header-navbar">
         <nav class="navbar navbar-expand-lg bg-light">
@@ -110,18 +156,20 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                Category
+                                Products
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">LCD</a></li>
-                                <li><a class="dropdown-item" href="#">Fridge</a></li>
-                                <li><a class="dropdown-item" href="#">AC</a></li>
+                                @foreach ($navbar_categories as $navbar_category)
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('getProductsByCategory', $navbar_category->slug) }}">{{ $navbar_category->category_title }}</a>
+                                    </li>
+                                @endforeach
                             </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/contact">Contact Us</a>
                         </li>
-                    </ul>
+                        </ul>
                 </div>
             </div>
         </nav>
@@ -194,210 +242,137 @@
             <h3>Top-Sale</h3>
         </div>
         <div class="box-category">
-             @foreach ($categories as $category)
-                                            <div class="box">
-                                                <img src="{{ asset('uploads/category/' . $category->category_image) }}"
-                                                    alt=""><br>
-                                                <b>{{ $category->category_title }}</b>
-                                            </div>
-                                            @endforeach
-                                    </div>
+            @foreach ($categories as $category)
+                <div class="box">
+                    <a href="{{ route('getProductsByCategory', $category->slug) }}">
+                        <img src="{{ asset('uploads/category/' . $category->category_image) }}" alt=""><br>
+                        <b>{{ $category->category_title }}</b>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    <!-- category sections ends here -->
+    <!-- service sections starts here -->
+    <div class="service-container">
+        <div class="box">
+            <i class="fa-solid fa-truck-fast icon"></i>
+            <h3>Free Shipping</h3>
+            <p>Lorem, ipsum dolor.</p>
+        </div>
+        <div class="box">
+            <i class="fa-solid fa-shield icon"></i>
+            <h3>Secure Payment</h3>
+            <p>Lorem, ipsum dolor.</p>
+        </div>
+        <div class="box">
+            <i class="fa-sharp fa-solid fa-tags icon"></i>
+            <h3>Best Price</h3>
+            <p>Lorem, ipsum dolor.</p>
+        </div>
+        <div class="box">
+            <i class="fa-solid fa-right-left icon"></i>
+            <h3>Easy Return</h3>
+            <p>Lorem, ipsum dolor.</p>
+        </div>
+    </div>
+
+    <!-- service sections ends here -->
+    <!-- top-sale product starts here -->
+    <section>
+        <div class="top-sale">
+            <div class="top-sale-title">
+                <h2>Our Top-Sale</h2>
+            </div>
+            <div class="row justify-content-center">
+                @foreach ($products as $item)
+                    <div class="top-sale-all-product col-md-1">
+                        <div class="product col-md-2">
+                            <div class="cart-icon">
+                                <a href="{{ route('addToCartDirect', $item->slug) }}">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                            </div>
+                            <div class="image">
+                                <div class="product-title">
+                                    {{ $item->product_title }}
                                 </div>
-                                <!-- category sections ends here -->
-                                <!-- service sections starts here -->
-                                <div class="service-container">
-                                    <div class="box">
-                                        <i class="fa-solid fa-truck-fast icon"></i>
-                                        <h3>Free Shipping</h3>
-                                        <p>Lorem, ipsum dolor.</p>
-                                    </div>
-                                    <div class="box">
-                                        <i class="fa-solid fa-shield icon"></i>
-                                        <h3>Secure Payment</h3>
-                                        <p>Lorem, ipsum dolor.</p>
-                                    </div>
-                                    <div class="box">
-                                        <i class="fa-sharp fa-solid fa-tags icon"></i>
-                                        <h3>Best Price</h3>
-                                        <p>Lorem, ipsum dolor.</p>
-                                    </div>
-                                    <div class="box">
-                                        <i class="fa-solid fa-right-left icon"></i>
-                                        <h3>Easy Return</h3>
-                                        <p>Lorem, ipsum dolor.</p>
-                                    </div>
+                                <img src="{{ asset('uploads/product/' . $item->product_image) }}"
+                                    alt="{{ $item->product_title }}" title="{{ $item->product_title }}"
+                                    class="img-fluid" />
+                            </div>
+                            <div class="content">
+                                <a href="#">{{ $item->product_title }}</a>
+                                <div class="product-top">
+                                    <h5>{{ $item->category->category_title }} |
+                                        @if ($item->product_stock > 0)
+                                            <span class="text-success">Available in
+                                                Stock</span>
+                                        @else
+                                            <span class="text-danger">Not Available in Stock</span>
+                                        @endif
+                                    </h5>
                                 </div>
-
-                                <!-- service sections ends here -->
-                                <!-- top-sale product starts here -->
-                                <section>
-                                    <div class="top-sale">
-                                        <div class="top-sale-title">
-                                            <h2>Our Top-Sale</h2>
-                                        </div>
-                                        <div class="top-sale-all-product">
-                                            <div class="product">
-                                                <div class="image">
-                                                    <div class="product-title">
-                                                        Watch
-                                                    </div>
-                                                    <img src="site/image/app.webp" alt="">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="product-top">
-                                                        <h2>Good Quality <span class="rate">4.9<span
-                                                                    class="star"><i
-                                                                        class="fa-solid fa-star"></i></span></span>
-                                                        </h2>
-                                                    </div>
-                                                    <h1><span>Rs.240</span>|<del>Rs.300</del>|</h1>
-
-                                                    <div class="button">
-                                                        <button>View Detail</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="product">
-                                                <div class="image">
-                                                    <div class="product-title">
-                                                        Watch
-                                                    </div>
-                                                    <img src="site/image/cucumber.jpg" alt="">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="product-top">
-                                                        <h2>Good Quality <span class="rate">4.8<span
-                                                                    class="star"><i
-                                                                        class="fa-solid fa-star"></i></span></span>
-                                                        </h2>
-                                                    </div>
-                                                    <h1><span>Rs.80</span>|<del>Rs.100</del>|</h1>
-
-                                                    <div class="button">
-                                                        <button>View Detail</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="product">
-                                                <div class="image">
-                                                    <div class="product-title">
-                                                        Watch
-                                                    </div>
-                                                    <img src="site/image/orange.jpg" alt="">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="product-top">
-                                                        <h2>Good Quality<span class="rate">4.9<span
-                                                                    class="star"><i
-                                                                        class="fa-solid fa-star"></i></span></span>
-                                                        </h2>
-                                                    </div>
-                                                    <h1><span>Rs.120</span>|<del>RS.150</del>|</h1>
+                                <h1>${{ $item->orginal_cost - $item->discounted_cost }}</span>
+                                    @if ($item->discounted_cost > 0)
+                                        <del>
+                                            <del class="text-danger">${{ $item->orginal_cost }}</del>
+                                    @endif
+                                </h1>
 
 
-                                                    <div class="button">
-                                                        <button>View Detail</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="product">
-                                                <div class="image">
-                                                    <div class="product-title">
-                                                        Watch
-                                                    </div>
-                                                    <img src="site/image/potato.avif" alt="">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="product-top">
-                                                        <h2>Good Quality<span class="rate">4.8<span
-                                                                    class="star"><i
-                                                                        class="fa-solid fa-star"></i></span></span>
-                                                        </h2>
-                                                    </div>
-                                                    <h1><span>Rs.50</span>|<del>Rs.80</del>|</h1>
+                                <div class="button">
+                                    <a href="{{ route('getProductDetails', $item->slug) }}" class="btn">View
+                                        Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    <!-- top-sale product ends here -->
+    <!-- footer section starts here -->
+    <section id="footer-box">
+        <div class="footer">
+            <h2>Contact Details</h2>
+            <h3>Address:</h3>
+            Khatri Traders
+            <p>Masbar-7, Pokhara, Nepal</p>
+            Tel:977+ 06183496
+            <hr>
+            <div class="foot-last">
+                <b>© 2023 ABC. All rights reserved.</b>
+            </div>
+        </div>
+    </section>
+    {{-- jquery link gareko --}}
+    <script src="{{ asset('site/jquery/jquery.js') }}"></script>
+
+    {{-- proper js ko javascript link gareko --}}
+    <script src="{{ asset('site/bootstrap/proper.js') }}"></script>
+
+    {{-- bootstrap ko javascript lai link gareko --}}
+    <script src="{{ asset('site/bootstrap/bootstrap.js') }}"></script>
+
+    {{-- toastr --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
-                                                    <div class="button">
-                                                        <button>View Detail</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="product">
-                                                <div class="image">
-                                                    <div class="product-title">
-                                                        Watch
-                                                    </div>
-                                                    <img src="site/image/onion.jpg" alt="">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="product-top">
-                                                        <h2>Good Quality <span class="rate">4.6<span
-                                                                    class="star"><i
-                                                                        class="fa-solid fa-star"></i></span></span>
-                                                        </h2>
-                                                    </div>
-                                                    <h1><span>Rs.60</span>|<del>Rs.90</del>|</h1>
+    {{-- fontawesome ko js link gareko --}}
+    <script src="{{ asset('site/fontawesome/all.js') }}"></script>
+
+    {{-- script.js link gareko --}}
+    <script src="{{ asset('site/js/script.js') }}"></script>
 
 
-                                                    <div class="button">
-                                                        <button>View Detail</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="product">
-                                                <div class="image">
-                                                    <div class="product-title">
-                                                        Watch
-                                                    </div>
-                                                    <img src="site/image/guava.jpg" alt="">
-                                                </div>
-                                                <div class="content">
-                                                    <div class="product-top">
-                                                        <h2>Good Quality<span class="rate">4.5<span
-                                                                    class="star"><i
-                                                                        class="fa-solid fa-star"></i></span></span>
-                                                        </h2>
-                                                    </div>
-                                                    <h1><span>Rs.1000</span>|<del>Rs.1500</del>|</h1>
-
-                                                    <div class="button">
-                                                        <button>View Detail</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-                                <!-- top-sale product ends here -->
-                                <!-- footer section starts here -->
-                                <section id="footer-box">
-                                    <div class="footer">
-                                        <h2>Contact Details</h2>
-                                        <h3>Address:</h3>
-                                        Khatri Traders
-                                        <p>Masbar-7, Pokhara, Nepal</p>
-                                        Tel:977+ 06183496
-                                        <hr>
-                                        <div class="foot-last">
-                                            <b>© 2023 ABC. All rights reserved.</b>
-                                        </div>
-                                    </div>
-                                </section>
-                                {{-- jquery link gareko --}}
-                                <script src="{{ asset('site/jquery/jquery.js') }}"></script>
-
-                                {{-- proper js ko javascript link gareko --}}
-                                <script src="{{ asset('site/bootstrap/proper.js') }}"></script>
-
-                                {{-- bootstrap ko javascript lai link gareko --}}
-                                <script src="{{ asset('site/bootstrap/bootstrap.js') }}"></script>
-
-
-                                {{-- fontawesome ko js link gareko --}}
-                                <script src="{{ asset('site/fontawesome/all.js') }}"></script>
-
-                                {{-- script.js link gareko --}}
-                                <script src="{{ asset('site/js/script.js') }}"></script>
+    <script>
+        @if (session('success'))
+            toastr.success('success!', '{{ session('success') }}');
+        @endif
+        @if (session('error'))
+            toastr.error('error!', '{{ session('error') }}');
+        @endif
+    </script>
 
 </body>
 
